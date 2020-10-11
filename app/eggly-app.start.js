@@ -14,16 +14,42 @@ angular.module("Eggly", []).controller("MainCtrl", function ($scope) {
     },
     {
       id: 1,
-      title: "Poorly Drawn Lines",
-      url: "http://www.poorlydrawnlines.com/",
-      category: "Humor",
+      title: "Egghead.io",
+      url: "http://angularjs.org",
+      category: "Development",
     },
     {
       id: 2,
-      title: "Polar - Flow",
-      url: "https://flow.polar.com",
+      title: "A List Apart",
+      url: "http://alistapart.com/",
+      category: "Design",
+    },
+    {
+      id: 3,
+      title: "One Page Love",
+      url: "http://onepagelove.com/",
+      category: "Design",
+    },
+    {
+      id: 4,
+      title: "MobilityWOD",
+      url: "http://www.mobilitywod.com/",
       category: "Exercise",
     },
+    {
+      id: 5,
+      title: "Robb Wolf",
+      url: "http://robbwolf.com/",
+      category: "Exercise",
+    },
+    {
+      id: 6,
+      title: "Senor Gif",
+      url: "http://memebase.cheezburger.com/senorgif",
+      category: "Humor",
+    },
+    { id: 7, title: "Wimp", url: "http://wimp.com", category: "Humor" },
+    { id: 8, title: "Dump", url: "http://dump.com", category: "Humor" },
   ];
   $scope.currentCategory = null;
 
@@ -51,6 +77,7 @@ angular.module("Eggly", []).controller("MainCtrl", function ($scope) {
   function startCreating() {
     $scope.isCreating = true;
     $scope.isEditing = false;
+    resetCreateForm();
   }
   function cancelCreating() {
     $scope.isCreating = false;
@@ -62,6 +89,7 @@ angular.module("Eggly", []).controller("MainCtrl", function ($scope) {
   }
   function cancelEditing() {
     $scope.isEditing = false;
+    $scope.setEditedBookmark(null);
   }
 
   function shouldShowCreating() {
@@ -77,4 +105,41 @@ angular.module("Eggly", []).controller("MainCtrl", function ($scope) {
   $scope.cancelEditing = cancelEditing;
   $scope.shouldShowCreating = shouldShowCreating;
   $scope.shouldShowEditing = shouldShowEditing;
+
+  // CRUD
+
+  function resetCreateForm() {
+    $scope.newBookmark = {
+      title: "",
+      url: "",
+      category: $scope.currentCategory.name,
+    };
+  }
+  function createBookmark(bookmark) {
+    bookmark.id = $scope.bookmarks.length;
+    $scope.bookmarks.push(bookmark);
+
+    resetCreateForm();
+  }
+
+  function updateBookmark(bookmark) {
+    var index = _.findIndex($scope.bookmarks, function (b) {
+      return b.id == bookmark.id;
+    });
+    $scope.bookmarks[index] = bookmark;
+    $scope.editedBookmark = null;
+    $scope.isEditing = false;
+  }
+function isSelectedBookmark (bookmarkId){
+    return $scope.editedBookmark !== null && $scope.editedBookmark.id === bookmarkId;
+}
+  $scope.createBookmark = createBookmark;
+  $scope.updateBookmark = updateBookmark;
+  $scope.isSelectedBookmark = isSelectedBookmark;
+  $scope.editedBookmark = null;
+
+  function setEditedBookmark(bookmark) {
+    $scope.editedBookmark = angular.copy(bookmark);
+  }
+  $scope.setEditedBookmark = setEditedBookmark;
 });
