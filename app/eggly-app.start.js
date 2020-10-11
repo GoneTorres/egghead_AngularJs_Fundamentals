@@ -142,4 +142,11 @@ function isSelectedBookmark (bookmarkId){
     $scope.editedBookmark = angular.copy(bookmark);
   }
   $scope.setEditedBookmark = setEditedBookmark;
+
+  function deleteBookmark (bookmark){
+    _.remove($scope.bookmarks, function(b){
+      return b.id == bookmark.id;
+    })
+  }
+  $scope.deleteBookmark = deleteBookmark;
 });
